@@ -1,0 +1,38 @@
+services:
+    mySql:
+        container_name: mySql
+        image: bitnami/mysql:8.0.30
+        restart: always
+        ports:
+            - 3307:3306
+        environment:
+            MYSQL_PASSWORD: "teste"
+            MYSQL_USER: "almir"
+            MYSQL_DATABASE: "Studing-python"
+            ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_AUTHENTICATION_PLUGIN: "mysql_native_password"
+            MYSQL_ROOT_PASSWORD: "12345"
+        networks:
+            Studing-network:
+                ipv4_address: 172.187.0.2
+
+    phpmyadmin:
+        depends_on:
+          - mySql
+        image: phpmyadmin
+        restart: always
+        ports:
+          - "8090:80"
+        environment:
+            PMA_HOST: mySql
+            MYSQL_ROOT_PASSWORD: "12345"
+        networks:
+            Studing-network:
+                ipv4_address: 172.187.0.3
+networks:
+    Studing-network:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.187.0.0/24
+                  gateway: 172.187.0.1
